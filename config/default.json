@@ -1,0 +1,6 @@
+{
+  "aws": {
+    "stackName": "api-lambda-stack",
+    "region": "eu-central-1"
+  }
+}

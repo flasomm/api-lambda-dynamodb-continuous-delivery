@@ -1,0 +1,22 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:ListRoles",
+        "iam:GetRolePolicy",
+        "iam:PassRole",
+        "dynamodb:*",
+        "logs:*",
+        "cloudwatch:*",
+        "lambda:*",
+        "s3:DeleteObject",
+        "s3:Get*",
+        "s3:List*",
+        "s3:Put*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

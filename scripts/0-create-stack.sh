@@ -6,10 +6,10 @@ set -e
 
 script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 template_file="$script_dir/../cloudformation.template"
-stack_name=lambda-api-stack
+stack_name=api-lambda-stack
 
 if [ -z "$AWS_DEFAULT_REGION" ]; then
-    aws_region="eu-west-1"
+    aws_region="eu-central-1"
 else
     aws_region=$AWS_DEFAULT_REGION
 fi

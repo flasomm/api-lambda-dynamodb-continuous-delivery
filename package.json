@@ -4,6 +4,8 @@
   "description": "Sample project that shows how AWS Lambda Aliases can be used to deploy dynamoDB and api gateway app and enable continuous integration.",
   "main": "index.js",
   "scripts": {
+    "create-stack": "node ./tools/create-stack.js",
+    "create-api": "node ./tools/create-api.js",
     "test": "mocha --recursive"
   },
   "repository": {
@@ -24,5 +26,13 @@
   "bugs": {
     "url": "https://github.com/flasomm/api-lambda-dynamodb-continuous-delivery/issues"
   },
-  "homepage": "https://github.com/flasomm/api-lambda-dynamodb-continuous-delivery#readme"
+  "homepage": "https://github.com/flasomm/api-lambda-dynamodb-continuous-delivery#readme",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "config": "^1.24.0",
+    "lodash": "^4.17.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.7.3"
+  }
 }

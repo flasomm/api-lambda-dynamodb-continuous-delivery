@@ -1,3 +1,6 @@
+/**
+ * Created by flasomm on 17/11/2016.
+ */
 'use strict';
 
 console.log('Loading function');

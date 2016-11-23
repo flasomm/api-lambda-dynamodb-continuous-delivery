@@ -1,0 +1,279 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2016-11-23T10:38:07Z",
+    "title": "MyLambdaApi",
+    "description": "Your first Users API with Amazon API Gateway...\n"
+  },
+  "host": "442djm2vw2.execute-api.eu-central-1.amazonaws.com",
+  "basePath": "/test",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get all users",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Number of items to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Max records to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 10,
+            "maximum": 1000
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:helloWorld/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Add a user",
+        "parameters": [
+          {
+            "name": "User",
+            "in": "body",
+            "description": "User to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "409": {
+            "description": "Duplicate email"
+          }
+        },
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:addUser/invocations",
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      }
+    },
+    "/users/{uid}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The user unique id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "#set($allParams = $input.params())\n{\n    \"body-json\" : $input.json('$'),\n    \"params\" : {\n        #foreach($type in $allParams.keySet())\n            #set($params = $allParams.get($type))\n            \"$type\" : {\n                #foreach($paramName in $params.keySet())\n                \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\n                    #if($foreach.hasNext),#end\n                #end\n            }\n            #if($foreach.hasNext),#end\n        #end\n    }\n}\n"
+          },
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:userById/invocations",
+          "passthroughBehavior": "when_no_templates",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "description": "Update a user",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "User",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "409": {
+            "description": "Duplicate email"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "responses": {
+            "default": {
+              "statusCode": "200"
+            }
+          },
+          "requestTemplates": {
+            "application/json": "#set($allParams = $input.params())\n{\n    \"body-json\" : $input.json('$'),\n    \"params\" : {\n        #foreach($type in $allParams.keySet())\n            #set($params = $allParams.get($type))\n            \"$type\" : {\n                #foreach($paramName in $params.keySet())\n                \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\n                    #if($foreach.hasNext),#end\n                #end\n            }\n            #if($foreach.hasNext),#end\n        #end\n    }\n}\n"
+          },
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:userById/invocations",
+          "passthroughBehavior": "when_no_templates",
+          "httpMethod": "POST",
+          "contentHandling": "CONVERT_TO_TEXT",
+          "type": "aws"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "x-api-key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Empty": {
+      "type": "object",
+      "title": "Empty Schema"
+    },
+    "User": {
+      "title": "User Schema",
+      "type": "object",
+      "required": [
+        "email",
+        "telephone"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "telephone": {
+          "type": "string"
+        }
+      }
+    },
+    "Error": {
+      "title": "Error Schema",
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string",
+          "minimum": 30,
+          "maximum": 200
+        },
+        "fields": {
+          "type": "object"
+        }
+      }
+    },
+    "Users": {
+      "title": "User Schema",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/User"
+      }
+    }
+  }
+}

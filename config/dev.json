@@ -1,0 +1,12 @@
+{
+  "aws": {
+    "stackName": "api-lambda-stack",
+    "region": "eu-central-1",
+    "accessKeyId": "841990749458",
+    "userName": "test2",
+    "groupName": "testApi",
+    "roleName": "apiLambda",
+    "groupPolicyName": "GroupTestAccess",
+    "rolePolicyName": "RoleTestAccess"
+  }
+}

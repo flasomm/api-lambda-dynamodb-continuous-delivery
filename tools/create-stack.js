@@ -141,22 +141,21 @@ function checkPolicy(policy) {
     });
 }
 
-function createPolicy() {
+function createPolicy(policyName, filename, description) {
     return new Promise(function (resolve, reject) {
-        let groupPolicyName = config.get('aws.groupPolicyName');
 
-        checkPolicy(groupPolicyName).then(function (res) {
+        checkPolicy(policyName).then(function (res) {
             resolve(res);
 
         }).catch(function (e) {
-            console.log("Create GROUP policies:", groupPolicyName);
+            console.log("Create policies:", policyName);
 
-            let policiesPath = path.join(__dirname, '..', 'config', 'groupPolicies.json');
+            let policiesPath = path.join(__dirname, '..', 'config', filename);
             let policies = fs.readFileSync(policiesPath, 'utf8');
             let params = {
                 PolicyDocument: policies,
-                PolicyName: groupPolicyName,
-                Description: 'Project group policies'
+                PolicyName: policyName,
+                Description: description
             };
             iam.createPolicy(params, function (err, data) {
                 if (err) {
@@ -170,15 +169,20 @@ function createPolicy() {
 }
 
 function attachGroupPolicy() {
-
     return new Promise(function (resolve, reject) {
-        createPolicy().then(function (res) {
-            let groupName = config.get('aws.groupName');
+        let groupPolicyName = config.get('aws.groupPolicyName');
+        let groupName = config.get('aws.groupName');
+
+        createPolicy(
+            groupPolicyName,
+            'groupPolicies.json',
+            'Project group policies'
+        ).then(function (res) {
+            console.log("Attach policies %s to GROUP : %s", groupName, groupPolicyName);
             let params = {
                 GroupName: groupName,
                 PolicyArn: res.Policy.Arn
             };
-            console.log("Attach policies %s to GROUP : %s", groupName, config.get('aws.groupPolicyName'));
 
             iam.attachGroupPolicy(params, function (err, data) {
                 if (err) {
@@ -228,8 +232,37 @@ function attachUserToGroup() {
     });
 }
 
+function attachRolePolicy() {
+    return new Promise(function (resolve, reject) {
+        let rolePolicyName = config.get('aws.rolePolicyName');
+        let roleName = config.get('aws.roleName');
+
+        createPolicy(
+            rolePolicyName,
+            'rolePolicies.json',
+            'Project role policies'
+        ).then(function (res) {
+            console.log("Attach policies %s to ROLE : %s", roleName, rolePolicyName);
+            let params = {
+                RoleName: roleName,
+                PolicyArn: res.Policy.Arn
+            };
+            iam.attachRolePolicy(params, function (err, data) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        }).catch(function (err) {
+            reject(err);
+        });
+    });
+}
+
 //createRole();
 attachUserToGroup();
+attachRolePolicy();
 
 /*var apigateway = new AWS.APIGateway(
  {

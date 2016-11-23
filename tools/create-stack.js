@@ -29,7 +29,7 @@ function createUser() {
         let userName = config.get('aws.userName');
 
         userInfos(userName).then(function (res) {
-            console.log('User already exist: \n', res);
+            console.log('User already exist');
             resolve(res);
 
         }).catch(function (e) {
@@ -65,7 +65,7 @@ function createGroup() {
         let groupName = config.get('aws.groupName');
 
         groupInfos(groupName).then(function (res) {
-            console.log('Group already exist: \n', res);
+            console.log('Group already exist');
             resolve(res);
 
         }).catch(function (e) {
@@ -101,14 +101,14 @@ function createRole() {
         let roleName = config.get('aws.roleName');
 
         roleInfos(roleName).then(function (res) {
-            console.log('Role already exist: \n', res);
+            console.log('Role already exist');
             resolve(res);
 
         }).catch(function (e) {
             if (!_.isNil(e.code) && _.isEqual('NoSuchEntity', e.code)) {
                 console.log("Create ROLE: ", roleName);
 
-                let policiesPath = path.join(__dirname, '..', 'config', 'rolePolicyDocument.json');
+                let policiesPath = path.join(__dirname, '..', 'config', 'policies', 'rolePolicyDocument.json');
                 let policies = fs.readFileSync(policiesPath, 'utf8');
                 let params = {
                     AssumeRolePolicyDocument: policies,
@@ -150,7 +150,7 @@ function createPolicy(policyName, filename, description) {
         }).catch(function (e) {
             console.log("Create policies:", policyName);
 
-            let policiesPath = path.join(__dirname, '..', 'config', filename);
+            let policiesPath = path.join(__dirname, '..', 'config', 'policies', filename);
             let policies = fs.readFileSync(policiesPath, 'utf8');
             let params = {
                 PolicyDocument: policies,

@@ -9,6 +9,7 @@
 
 node_modules
 target
+build
 
 xunit-*.xml
 npm-debug.log

@@ -64,7 +64,7 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:helloWorld/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersGet/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -104,7 +104,7 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:addUser/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersPost/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -151,7 +151,7 @@
           "requestTemplates": {
             "application/json": "#set($allParams = $input.params())\n{\n    \"body-json\" : $input.json('$'),\n    \"params\" : {\n        #foreach($type in $allParams.keySet())\n            #set($params = $allParams.get($type))\n            \"$type\" : {\n                #foreach($paramName in $params.keySet())\n                \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\n                    #if($foreach.hasNext),#end\n                #end\n            }\n            #if($foreach.hasNext),#end\n        #end\n    }\n}\n"
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:userById/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersGetByUid/invocations",
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -210,7 +210,7 @@
           "requestTemplates": {
             "application/json": "#set($allParams = $input.params())\n{\n    \"body-json\" : $input.json('$'),\n    \"params\" : {\n        #foreach($type in $allParams.keySet())\n            #set($params = $allParams.get($type))\n            \"$type\" : {\n                #foreach($paramName in $params.keySet())\n                \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\n                    #if($foreach.hasNext),#end\n                #end\n            }\n            #if($foreach.hasNext),#end\n        #end\n    }\n}\n"
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:userById/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersPut/invocations",
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",

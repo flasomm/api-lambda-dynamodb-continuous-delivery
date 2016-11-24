@@ -1,12 +1,13 @@
 {
   "aws": {
-    "stackName": "api-lambda-stack",
+    "apiName": "MyTestTestApi",
     "region": "eu-central-1",
     "accessKeyId": "841990749458",
     "userName": "test2",
     "groupName": "testApi",
     "roleName": "apiLambda",
     "groupPolicyName": "GroupTestAccess",
-    "rolePolicyName": "RoleTestAccess"
+    "rolePolicyName": "RoleTestAccess",
+    "s3BucketName": "my-project-test"
   }
 }

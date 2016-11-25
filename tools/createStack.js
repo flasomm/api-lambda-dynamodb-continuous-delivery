@@ -38,7 +38,7 @@ function createUser() {
         let userName = config.get('aws.userName');
 
         userInfos(config.get('aws.userName')).then(function (res) {
-            console.log('User already exist');
+            console.log('USER already exist');
             resolve(res);
 
         }).catch(function (e) {
@@ -74,7 +74,7 @@ function createGroup() {
         let groupName = config.get('aws.groupName');
 
         groupInfos(groupName).then(function (res) {
-            console.log('Group already exist');
+            console.log('GROUP already exist');
             resolve(res);
 
         }).catch(function (e) {
@@ -110,19 +110,19 @@ function createRole() {
         let roleName = config.get('aws.roleName');
 
         roleInfos(roleName).then(function (res) {
-            console.log('Role already exist');
+            console.log('ROLE already exist');
             resolve(res);
 
         }).catch(function (e) {
             if (!_.isNil(e.code) && _.isEqual('NoSuchEntity', e.code)) {
-                console.log("Create ROLE: ", roleName);
-
                 let policiesPath = path.join(__dirname, '..', 'config', 'policies', 'rolePolicyDocument.json');
                 let policies = fs.readFileSync(policiesPath, 'utf8');
                 let params = {
                     AssumeRolePolicyDocument: policies,
                     RoleName: roleName
                 };
+                console.log("Create ROLE: ", roleName);
+
                 iam.createRole(params, function (err, data) {
                     if (err) {
                         reject(err);
@@ -138,7 +138,7 @@ function createRole() {
 function checkPolicy(policy) {
     return new Promise(function (resolve, reject) {
         let params = {
-            PolicyArn: 'arn:aws:iam::' + config.get('aws.accessKeyId') + ':policy/' + policy
+            PolicyArn: sprintf('arn:aws:iam::%s:policy/%s', config.get('aws.accessKeyId'), policy)
         };
         iam.getPolicy(params, function (err, data) {
             if (err) {
@@ -152,13 +152,10 @@ function checkPolicy(policy) {
 
 function createPolicy(policyName, filename, description) {
     return new Promise(function (resolve, reject) {
-
         checkPolicy(policyName).then(function (res) {
             resolve(res);
 
         }).catch(function (e) {
-            console.log("Create policies:", policyName);
-
             let policiesPath = path.join(__dirname, '..', 'config', 'policies', filename);
             let policies = fs.readFileSync(policiesPath, 'utf8');
             let params = {
@@ -166,6 +163,8 @@ function createPolicy(policyName, filename, description) {
                 PolicyName: policyName,
                 Description: description
             };
+            console.log("Create policies:", policyName);
+
             iam.createPolicy(params, function (err, data) {
                 if (err) {
                     reject(err);
@@ -180,18 +179,18 @@ function createPolicy(policyName, filename, description) {
 function attachGroupPolicy() {
     return new Promise(function (resolve, reject) {
         let groupPolicyName = config.get('aws.groupPolicyName');
-        let groupName = config.get('aws.groupName');
 
         createPolicy(
             groupPolicyName,
             'groupPolicies.json',
             'Project group policies'
         ).then(function (res) {
-            console.log("Attach policies %s to GROUP : %s", groupName, groupPolicyName);
+            let groupName = config.get('aws.groupName');
             let params = {
                 GroupName: groupName,
                 PolicyArn: res.Policy.Arn
             };
+            console.log("Attach policies %s to GROUP : %s", groupName, groupPolicyName);
 
             iam.attachGroupPolicy(params, function (err, data) {
                 if (err) {
@@ -209,18 +208,19 @@ function attachGroupPolicy() {
 function attachRolePolicy() {
     return new Promise(function (resolve, reject) {
         let rolePolicyName = config.get('aws.rolePolicyName');
-        let roleName = config.get('aws.roleName');
 
         createPolicy(
             rolePolicyName,
             'rolePolicies.json',
             'Project role policies'
         ).then(function (res) {
-            console.log("Attach policies %s to ROLE : %s", roleName, rolePolicyName);
+            let roleName = config.get('aws.roleName');
             let params = {
                 RoleName: roleName,
                 PolicyArn: res.Policy.Arn
             };
+            console.log("Attach policies %s to ROLE : %s", roleName, rolePolicyName);
+
             iam.attachRolePolicy(params, function (err, data) {
                 if (err) {
                     reject(err);
@@ -257,7 +257,7 @@ function attachUserGroupRole() {
             });
         });
     }).catch(function (e) {
-        console.log('Error: ', e);
+        console.error(e);
     });
 }
 
@@ -327,8 +327,8 @@ function createS3Bucket() {
     });
 }
 
-function parseSwaggerFunction() {
-    return new Promise(function (resolve, reject) {
+function extractSwaggerFunction() {
+    return new Promise(function (resolve) {
         let swaggerPath = path.join(__dirname, '..', 'config', 'swagger.json');
         let swagger = fs.readFileSync(swaggerPath, 'utf8');
         let swaggerObject = JSON.parse(swagger);
@@ -348,27 +348,20 @@ function parseSwaggerFunction() {
     });
 }
 
-function createLambdaSource() {
-    return new Promise(function (resolve, reject) {
-        parseSwaggerFunction().then(function (res) {
-            let sampleLambdaPath = path.join(__dirname, '..', 'src', 'lambda', 'sample.js');
-            let lambdaCode = fs.readFileSync(sampleLambdaPath, 'utf8');
+function createLambdaSource(files) {
+    let sampleLambdaPath = path.join(__dirname, '..', 'src', 'lambda', 'sample.js');
+    let lambdaCode = fs.readFileSync(sampleLambdaPath, 'utf8');
 
-            _.forEach(res, function (val) {
-                let lambdaPath = path.join(__dirname, '..', 'src', 'lambda', val + '.js');
-
-                fs.access(lambdaPath, fs.F_OK, function (err) {
-                    if (err) {
-                        fs.writeFile(lambdaPath, lambdaCode, function (err) {
-                            if (err) {
-                                reject(err);
-                            }
-                            resolve(res);
-                        });
+    _.forEach(files, function (val) {
+        let lambdaPath = path.join(__dirname, '..', 'src', 'lambda', val + '.js');
+        fs.access(lambdaPath, fs.F_OK, function (err) {
+            if (err) {
+                fs.writeFile(lambdaPath, lambdaCode, function (e) {
+                    if (e) {
+                        console.error(e);
                     }
-                    resolve(res);
                 });
-            });
+            }
         });
     });
 }
@@ -390,54 +383,49 @@ function initBuildDir() {
 }
 
 function packageLambda(files) {
-    return new Promise(function (resolve, reject) {
-        _.forEach(files, function (file) {
-            let buildDir = path.join(__dirname, '..', 'build', _.upperFirst(file));
-            let lambdaSrcFile = path.join(__dirname, '..', 'src', 'lambda', file + '.js');
-            let packageSrcFile = path.join(__dirname, '..', 'package.json');
 
-            try {
-                fs.mkdir(buildDir, function (e) {
-                    if (!e || (e && e.code === 'EEXIST')) {
-                        reject(e);
+    _.forEach(files, function (file) {
+        let buildDir = path.join(__dirname, '..', 'build', _.upperFirst(file));
+        let lambdaSrcFile = path.join(__dirname, '..', 'src', 'lambda', file + '.js');
+        let lambdaDestFile = sprintf('%s/%s.js', buildDir, _.upperFirst(file));
+        let packageSrcFile = path.join(__dirname, '..', 'package.json');
+
+        try {
+            fs.mkdir(buildDir, function (e) {
+                console.log('Create directory: ' + buildDir);
+                if (e) {
+                    console.error(e);
+                }
+                fs.createReadStream(lambdaSrcFile).pipe(fs.createWriteStream(lambdaDestFile));
+                fs.createReadStream(packageSrcFile).pipe(fs.createWriteStream(buildDir + '/package.json'));
+
+                process.chdir(buildDir);
+                console.log('Change to directory ', process.cwd());
+                exec('npm install --production', function (error, stdout, stderr) {
+                    if (error) {
+                        console.error(error);
                     }
-                    fs.createReadStream(lambdaSrcFile).pipe(fs.createWriteStream(buildDir + '/' + _.upperFirst(file) + '.js'));
-                    fs.createReadStream(packageSrcFile).pipe(fs.createWriteStream(buildDir + '/package.json'));
-
-                    process.chdir(buildDir);
-                    console.log('Change to directory: ' + process.cwd());
-                    exec('npm install --production', function (error, stdout, stderr) {
-                        if (error) {
-                            console.log(error);
-                            reject(error);
-                        }
-                        if (stderr) {
-                            console.log(stderr);
-                        }
-                        resolve(stdout);
-                    });
+                    if (stderr) {
+                        console.log(stderr);
+                    }
+                    console.log('exec npm install --production\n', stdout);
                 });
-            } catch (err) {
-                reject(err);
-            }
-        })
-    });
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    })
 }
 
 function packageLambdas() {
     return new Promise(function (resolve, reject) {
-        createLambdaSource().then(function (files) {
+        extractSwaggerFunction().then(function (files) {
+            createLambdaSource(files);
             initBuildDir().catch(function (e) {
                 reject(e);
             }).then(function () {
-                packageLambda(files).then(function (res) {
-                    resolve(res);
-                }).catch(function (e) {
-                    reject(e);
-                });
+                packageLambda(files);
             });
-        }).catch(function (e) {
-            reject(e);
         });
     });
 }

@@ -5,11 +5,11 @@
 set -e
 
 script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-zip_file="$script_dir/../target/api-lambda.zip"
-lambda_name=ApiLambda
+zip_file="$script_dir/../build/UsersGet.zip"
+lambda_name=UsersGet
 
 if [ -z "$AWS_DEFAULT_REGION" ]; then
-    aws_region="eu-west-1"
+    aws_region="eu-central-1"
 else
     aws_region=$AWS_DEFAULT_REGION
 fi

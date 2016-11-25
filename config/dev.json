@@ -2,9 +2,9 @@
   "aws": {
     "apiName": "MyTestTestApi",
     "region": "eu-central-1",
-    "accessKeyId": "841990749458",
-    "userName": "test2",
-    "groupName": "testApi",
+    "accountId": "841990749458",
+    "userName": "test",
+    "groupName": "Users",
     "roleName": "apiLambda",
     "groupPolicyName": "GroupTestAccess",
     "rolePolicyName": "RoleTestAccess",

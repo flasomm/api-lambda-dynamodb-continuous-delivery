@@ -1,6 +1,14 @@
 {
   "projectName": "MyProjectTest",
   "aws": {
-    "region": "eu-central-1"
+    "apiName": "MyTestTestApi",
+    "region": "eu-central-1",
+    "accountId": "841990749458",
+    "userName": "test",
+    "groupName": "Users",
+    "roleName": "apiLambda",
+    "groupPolicyName": "GroupTestAccess",
+    "rolePolicyName": "RoleTestAccess",
+    "s3BucketName": "my-project-test"
   }
 }

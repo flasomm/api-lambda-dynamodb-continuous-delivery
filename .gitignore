@@ -8,8 +8,8 @@
 .DS_Store
 
 node_modules
-target
-build
+dist
 
 xunit-*.xml
 npm-debug.log
+credentials.json

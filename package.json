@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "Sample project that shows how AWS Lambda Aliases can be used to deploy dynamoDB and api gateway app and enable continuous integration.",
   "main": "index.js",
-  "scripts": {
-    "create-iam": "node ./tools/createIdentity.js",
-    "swagger-to-lambda": "node ./tools/swaggerToLambda.js",
-    "test": "mocha --recursive"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/flasomm/api-lambda-dynamodb-continuous-delivery.git"
@@ -27,15 +22,20 @@
     "url": "https://github.com/flasomm/api-lambda-dynamodb-continuous-delivery/issues"
   },
   "homepage": "https://github.com/flasomm/api-lambda-dynamodb-continuous-delivery#readme",
-  "dependencies": {
-    "bluebird": "^3.4.6",
-    "aws-sdk": "^2.7.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "archiver": "^1.2.0",
+    "bluebird": "^3.4.6",
     "config": "^1.24.0",
+    "grunt": "^1.0.1",
+    "grunt-aws-lambda": "^0.13.0",
+    "grunt-aws-s3": "^0.14.5",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-execute": "^0.2.2",
+    "grunt-pack": "^0.1.5",
+    "load-grunt-tasks": "^3.5.2",
     "lodash": "^4.17.2",
-    "rimraf": "^2.5.4",
     "sprintf-js": "^1.0.3"
   }
 }

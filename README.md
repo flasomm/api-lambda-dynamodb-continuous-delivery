@@ -1,6 +1,6 @@
 # api-lambda-dynamodb-continuous-delivery
 
-> This boilerplate is an example project to deploy full stack ([AWS Lambda](http://aws.amazon.com/lambda/), [API Gateway](http://aws.amazon.com/api-gateway/)) to [S3](http://aws.amazon.com/s3/).
+> This boilerplate is an example project to deploy full stack ([AWS Lambda](http://aws.amazon.com/lambda/), [AWS API Gateway](http://aws.amazon.com/api-gateway/)) to [AWS S3](http://aws.amazon.com/s3/).
 
 ## Getting Started
 

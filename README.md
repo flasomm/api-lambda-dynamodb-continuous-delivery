@@ -8,8 +8,8 @@ sudo pip install awscli
 aws configure
 
 # set aws credential in project
-Copy credentials.local.json to credentials.json
-Set ACCESS_KEY_ID and SECRET_ACCESS_KEY
+- Copy credentials.local.json to credentials.json
+- Set ACCESS_KEY_ID and SECRET_ACCESS_KEY
 
 # create stack
 grunt install

@@ -1,8 +1,8 @@
 # api-lambda-dynamodb-continuous-delivery
 
-> SmartServices project.
+> This boilerplate is an example project to deploy full stack ([AWS Lambda](http://aws.amazon.com/lambda/), [API Gateway](http://aws.amazon.com/api-gateway/)) to [S3](http://aws.amazon.com/s3/).
 
-## Coding rules
+## Getting Started
 
 ### Directory structure
 ```
@@ -37,8 +37,7 @@
   |______post/
 ```
 
-
-## Getting Started
+## Install
 
 ### Install aws cli
 

@@ -13,3 +13,4 @@ dist
 xunit-*.xml
 npm-debug.log
 credentials.json
+README-smse.md

@@ -1,5 +1,6 @@
 /**
- * Created by flasomm on 20/11/2016.
+ * @author Fabrice Sommavilla <fs@physalix.com>.
+ * @date 20/11/2016
  */
 'use strict';
 

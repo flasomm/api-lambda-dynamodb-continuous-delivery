@@ -7,6 +7,7 @@
         "iam:ListRoles",
         "iam:GetRolePolicy",
         "iam:PassRole",
+        "apigateway:*",
         "dynamodb:*",
         "logs:*",
         "cloudwatch:*",

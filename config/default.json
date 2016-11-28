@@ -1,7 +1,7 @@
 {
   "projectName": "MyProjectTest",
   "aws": {
-    "apiName": "MyTestTestApi",
+    "apiName": "MyTestApi",
     "region": "eu-central-1",
     "accountId": "841990749458",
     "userName": "test",

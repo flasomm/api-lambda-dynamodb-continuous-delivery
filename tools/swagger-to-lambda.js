@@ -1,5 +1,6 @@
 /**
- * Created by Fabrice Sommavilla on 20/11/2016.
+ * @author Fabrice Sommavilla <fs@physalix.com>.
+ * @date 20/11/2016
  */
 'use strict';
 
@@ -48,10 +49,6 @@ function updatePackageFile(file, name) {
     });
 }
 
-function updateGruntFile() {
-
-}
-
 /**
  * Create lambda directories with sources.
  *
@@ -59,6 +56,7 @@ function updateGruntFile() {
  */
 function createLambdaSource(files) {
     let tmplDir = path.join(__dirname, '..', 'src', 'template/');
+    let lambdaFile = 'index.js';
     let eventFile = 'event.json';
     let pkgFile = 'package.json';
 
@@ -69,7 +67,7 @@ function createLambdaSource(files) {
                 fs.mkdir(lambdaDir, function (e) {
                     if (!e || (e && e.code === 'EEXIST')) {
                         fs.writeFile(
-                            lambdaDir + val + '.js',
+                            lambdaDir + lambdaFile,
                             fs.readFileSync(tmplDir + 'index.js', 'utf8'),
                             function (e) {
                                 if (e) {
@@ -100,10 +98,6 @@ function createLambdaSource(files) {
     });
 }
 
-function swaggerToLambdas() {
-    extractSwaggerFunction().then(function (files) {
-        createLambdaSource(files);
-    });
-}
-
-swaggerToLambdas();
+extractSwaggerFunction().then(function (files) {
+    createLambdaSource(files);
+});

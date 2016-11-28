@@ -5,8 +5,8 @@
     "title": "MyLambdaApi",
     "description": "Your first Users API with Amazon API Gateway...\n"
   },
-  "host": "442djm2vw2.execute-api.eu-central-1.amazonaws.com",
-  "basePath": "/test",
+  "host": "qkr8v6yq45.execute-api.eu-central-1.amazonaws.com",
+  "basePath": "/staging",
   "schemes": [
     "http",
     "https"

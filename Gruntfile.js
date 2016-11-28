@@ -188,7 +188,7 @@ module.exports = function (grunt) {
     grunt.registerTask('create_lambdas', ['jshint', 'execute:create_lambdas']); // create all lambdas functions on aws
     grunt.registerTask('create_api', ['jshint', 'execute:create_api']); // create api on aws
     grunt.registerTask('update_api', ['jshint', 'execute:update_api']);
-    grunt.registerTask('create_stack', ['jshint', 'execute:swagger_to_lambda', 'clean', 'lambda_package', 'aws_s3:staging', 'execute:create_lambdas', 'execute:create_api']);
+    grunt.registerTask('install', ['jshint', 'execute:swagger_to_lambda', 'clean', 'lambda_package', 'aws_s3:staging', 'execute:create_lambdas', 'execute:create_api']);
 
     grunt.registerTask('run', ['jshint', 'lambda_invoke']); // grunt run:default (run default lambda) or grunt run (all lambdas)
     grunt.registerTask('package', ['jshint', 'clean', 'lambda_package']); // create lambdas package

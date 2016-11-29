@@ -1,4 +1,9 @@
 {
   "esversion": 6,
-  "node": true
+  "node": true,
+  "curly": true,
+  "eqeqeq": true,
+  "maxparams": 3,
+  "unused": true,
+  "noyield": true
 }

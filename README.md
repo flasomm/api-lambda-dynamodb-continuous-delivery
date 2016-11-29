@@ -87,7 +87,7 @@ grunt install
 grunt
 ```
 
-### Create or update local src directory based on swagger.json 
+### Create or update local source directory based on swagger.json 
 
 ```shell
 grunt swagger_to_lambda
@@ -125,8 +125,7 @@ grunt run
 
 #### Options
 target: `String`
-
-Ex: `grunt run --target=usersGet`  
+Usage: `grunt run --target=usersGet`  
 
 ### Package all lambdas locally
 
@@ -136,8 +135,7 @@ grunt package
 
 #### Options
 target: `String`
-
-Ex: `grunt package --target=usersGet`  
+Usage: `grunt package --target=usersGet`  
 
 ### Upload packages lambdas to AWS s3
 
@@ -148,7 +146,7 @@ grunt upload
 #### Options
 target: `String`
 
-Ex: `grunt upload --target=usersGet`  
+Usage: `grunt upload --target=usersGet`  
 
 ### Package, upload and update lambdas to AWS
 
@@ -159,7 +157,7 @@ grunt deploy
 #### Options
 target: `String`
 
-Ex: `grunt deploy --target=usersGet`  
+Usage: `grunt deploy --target=usersGet`  
 
 ### Test lambda localy
 
@@ -170,5 +168,5 @@ grunt test
 #### Options
 target: `String`
 
-Ex: `grunt test --target=usersGet`  
+Usage: `grunt test --target=usersGet`  
 

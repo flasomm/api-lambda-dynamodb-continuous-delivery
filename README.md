@@ -59,8 +59,13 @@ Enter ACCESS_KEY_ID, SECRET_ACCESS_KEY and REGION.
 git clone smse-ac
 ```
 
-### Change parameters in config/default, config/dev, config/prod
+### Install dependencies
 
+```shell
+npm install
+```
+
+#### Change parameters in config/default, config/dev, config/prod
 
 ### Set aws credential in project
 - Copy credentials.local.json to credentials.json
@@ -74,16 +79,96 @@ Install project localy, deploy lambdas and set API with swagger.json to AWS.
 grunt install
 ```
 
-Deploy a lambda to AWS
+## Usage Grunt Commands
+
+### Run jshint
 
 ```shell
-grunt deploy <method>
+grunt
 ```
-Ex: grunt deploy users-get
 
-Test lambda localy
+### Create or update local src directory based on swagger.json 
 
 ```shell
-grunt test <method> (ex: users-get)
+grunt swagger_to_lambda
 ```
-Ex: grunt test users-get
+
+### Create lambdas, if does not exist on AWS
+
+```shell
+grunt create_lambdas
+```
+
+### Create api from swagger.json file, if does not exist on AWS
+
+```shell
+grunt create_api
+```
+
+### Create api from swagger.json file on AWS
+
+```shell
+grunt update_api
+```
+
+### Install the full stack (lambdas, api, s3,...) to AWS
+
+```shell
+grunt install
+```
+
+### Invoke lambda locally
+
+```shell
+grunt run
+```
+
+#### Options
+target: `String`
+
+Ex: `grunt run --target=usersGet`  
+
+### Package all lambdas locally
+
+```shell
+grunt package
+```
+
+#### Options
+target: `String`
+
+Ex: `grunt package --target=usersGet`  
+
+### Upload packages lambdas to AWS s3
+
+```shell
+grunt upload
+```
+
+#### Options
+target: `String`
+
+Ex: `grunt upload --target=usersGet`  
+
+### Package, upload and update lambdas to AWS
+
+```shell
+grunt deploy
+```
+
+#### Options
+target: `String`
+
+Ex: `grunt deploy --target=usersGet`  
+
+### Test lambda localy
+
+```shell
+grunt test
+```
+
+#### Options
+target: `String`
+
+Ex: `grunt test --target=usersGet`  
+

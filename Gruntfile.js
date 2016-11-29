@@ -170,11 +170,10 @@ module.exports = function (grunt) {
     grunt.registerTask('update_api', ['jshint', 'execute:update_api']);
     grunt.registerTask('install', ['jshint', 'execute:swagger_to_lambda', 'clean', 'lambda_package', 'aws_s3:staging', 'execute:create_lambdas', 'execute:create_api']);
 
-    grunt.registerTask('run', ['jshint', 'lambda_invoke']); // grunt run:default (run default lambda) or grunt run (all lambdas)
-    grunt.registerTask('package', ['jshint', 'clean', 'lambda_package']); // create lambdas package
-    grunt.registerTask('upload', ['jshint', 'clean', 'lambda_package', 'aws_s3:staging']); // create lambdas package and upload to s3
-    grunt.registerTask('deploy', ['jshint', 'clean', 'lambda_package', 'aws_s3:staging', 'lambda_deploy']);
+    var target = grunt.option('target') || '';
+    grunt.registerTask('run', ['jshint', 'lambda_invoke']);
+    grunt.registerTask('package', ['jshint', 'clean', 'lambda_package:' + target]);
+    grunt.registerTask('upload', ['jshint', 'clean', 'lambda_package' + target, 'aws_s3:staging']);
+    grunt.registerTask('deploy', ['jshint', 'clean', 'lambda_package:' + target, 'aws_s3:staging', 'lambda_deploy:' + target]);
 
-    // Update only userGet lambda
-    // grunt jshint clean lambda_package:usersGet aws_s3:staging lambda_deploy:usersGet
 };

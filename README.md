@@ -125,6 +125,7 @@ grunt run
 
 #### Options
 target: `String`
+
 Usage: `grunt run --target=usersGet`  
 
 ### Package all lambdas locally
@@ -135,6 +136,7 @@ grunt package
 
 #### Options
 target: `String`
+
 Usage: `grunt package --target=usersGet`  
 
 ### Upload packages lambdas to AWS s3

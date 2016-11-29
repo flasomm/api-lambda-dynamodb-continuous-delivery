@@ -1,4 +1,4 @@
-# api-lambda-dynamodb-continuous-delivery
+# aws-api-lambda-boilerplate
 
 > This boilerplate is an example project to deploy full stack ([AWS Lambda](http://aws.amazon.com/lambda/), [AWS API Gateway](http://aws.amazon.com/api-gateway/)) to [AWS S3](http://aws.amazon.com/s3/).
 
@@ -58,6 +58,9 @@ Enter ACCESS_KEY_ID, SECRET_ACCESS_KEY and REGION.
 ```shell
 git clone smse-ac
 ```
+
+### Change parameters in config/default, config/dev, config/prod
+
 
 ### Set aws credential in project
 - Copy credentials.local.json to credentials.json

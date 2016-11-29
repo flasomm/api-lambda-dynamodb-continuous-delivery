@@ -9,26 +9,40 @@ var fs = require('fs');
 var path = require('path');
 var Promise = require("bluebird");
 var _ = require('lodash');
-var sprintf = require("sprintf-js").sprintf;
 
 /**
  * Extract all resources, methods and params from swagger file.
  */
 function extractSwaggerFunction() {
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
         let swaggerPath = path.join(__dirname, '..', 'config', 'swagger.json');
         let swagger = fs.readFileSync(swaggerPath, 'utf8');
         let swaggerObject = JSON.parse(swagger);
         let result = [];
-        _.forIn(swaggerObject.paths, function (value, key) {
-            _.forIn(value, function (value, method) {
-                let match = /\/(.*)/g.exec(key);
-                let matchWithParam = /\/(.*)\/\{(.*)\}/g.exec(key);
-                let resource = _.isNull(matchWithParam) ? match[1] : matchWithParam[1];
-                let params = _.isNull(matchWithParam) || _.isEqual('put', method) ? '' : sprintf("By%s", _.upperFirst(matchWithParam[2]));
-                result.push(sprintf("%s%s%s", _.upperFirst(resource), _.upperFirst(method), params));
+
+        _.forEach(swaggerObject.paths, function (pathObj, path) {
+            // Only process a path if it's an object
+            if (!_.isPlainObject(pathObj)) {
+                reject('error');
+            }
+            _.forIn(pathObj, function (value, method) {
+                var operation = pathObj[method];
+
+                if (_.isUndefined(operation)) {
+                    // Operation does not exist
+                    reject('undefined');
+                } else if (!_.isPlainObject(operation)) {
+                    reject('The %s operation for %s path is not an Operation Object', method, path);
+                }
+
+                let resource = path.split("/")[1];
+                let macthParam = /^\{(.*)\}$/g.exec(path.split("/")[2]);
+                let params = _.isNull(macthParam) || _.isEqual('put', method) ? null : macthParam[1];
+
+                result.push({"resource": resource, "method": method, "params": params});
             });
         });
+
         resolve(result);
     });
 }
@@ -43,7 +57,7 @@ function updatePackageFile(file, name) {
     return new Promise(function (resolve) {
         let content = fs.readFileSync(file, 'utf8');
         let packageObj = JSON.parse(content);
-        packageObj.name = _.kebabCase(name);
+        packageObj.name = config.get('projectName') + '-resources-' + name;
 
         resolve(JSON.stringify(packageObj));
     });
@@ -55,49 +69,61 @@ function updatePackageFile(file, name) {
  * @param files
  */
 function createLambdaSource(files) {
-    let tmplDir = path.join(__dirname, '..', 'src', 'template/');
-    let lambdaFile = 'index.js';
-    let eventFile = 'event.json';
-    let pkgFile = 'package.json';
+    _.forEach(files, function (obj) {
+        let ressourceDir = path.join(__dirname, '..', 'src', 'resources', obj.resource + '/');
+        let methodName = _.isNil(obj.params) ? obj.method : obj.method + '-by-' + obj.params;
+        let methodDir = ressourceDir + methodName + '/';
 
-    _.forEach(files, function (val) {
-        let lambdaDir = path.join(__dirname, '..', 'src', val + '/');
-        fs.access(lambdaDir, fs.F_OK, function (err) {
+        fs.access(ressourceDir, fs.F_OK, function (err) {
             if (err) {
-                fs.mkdir(lambdaDir, function (e) {
-                    if (!e || (e && e.code === 'EEXIST')) {
-                        fs.writeFile(
-                            lambdaDir + lambdaFile,
-                            fs.readFileSync(tmplDir + 'index.js', 'utf8'),
-                            function (e) {
-                                if (e) {
-                                    console.error(e);
-                                }
-                            });
-
-                        fs.writeFile(
-                            lambdaDir + eventFile,
-                            fs.readFileSync(tmplDir + eventFile, 'utf8'),
-                            function (e) {
-                                if (e) {
-                                    console.error(e);
-                                }
-                            });
-
-                        updatePackageFile(tmplDir + pkgFile, val).then(function (res) {
-                            fs.writeFile(lambdaDir + pkgFile, res, function (e) {
-                                if (e) {
-                                    console.error(e);
-                                }
-                            });
-                        });
-                    }
+                fs.mkdir(ressourceDir, function (e) {
                 });
             }
         });
+
+        let tmplDir = path.join(__dirname, '..', 'src', 'template/');
+        let lambdaFile = 'index.js';
+        let eventFile = 'event.json';
+        let pkgFile = 'package.json';
+
+        fs.access(methodDir, fs.F_OK, function (err) {
+            if (err) {
+                fs.mkdir(methodDir, function (e) {
+                    fs.writeFile(
+                        methodDir + lambdaFile,
+                        fs.readFileSync(tmplDir + 'index.js', 'utf8'),
+                        function (e) {
+                            if (e) {
+                                console.error(e);
+                            }
+                        });
+
+                    fs.writeFile(
+                        methodDir + eventFile,
+                        fs.readFileSync(tmplDir + eventFile, 'utf8'),
+                        function (e) {
+                            if (e) {
+                                console.error(e);
+                            }
+                        });
+
+                    updatePackageFile(tmplDir + pkgFile, obj.resource + '-' + methodName).then(function (res) {
+                        fs.writeFile(methodDir + pkgFile, res, function (e) {
+                            if (e) {
+                                console.error(e);
+                            }
+                        });
+                    });
+                });
+            }
+        });
+
     });
 }
 
 extractSwaggerFunction().then(function (files) {
     createLambdaSource(files);
+
+}).error(function (e) {
+    console.log(e);
 });

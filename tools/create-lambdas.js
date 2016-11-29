@@ -1,6 +1,5 @@
 /**
- * @author Fabrice Sommavilla <fs@physalix.com>.
- * @date 26/11/2016
+ * Created by Fabrice Sommavilla on 26/11/2016.
  */
 'use strict';
 
@@ -15,29 +14,32 @@ var lambda = new AWS.Lambda({
     region: config.get('aws.region')
 });
 
-let srcDir = path.join(__dirname, '..', 'src');
+let distDir = path.join(__dirname, '..', 'dist/');
 
-fs.readdir(srcDir, (err, files) => {
-    files.forEach(file => {
-        if (!_.isEqual("template", file) || !_.isEqual(".DS_Store", file)) {
-            var params = {
-                Code: {
-                    S3Bucket: config.get('aws.s3BucketName'),
-                    S3Key: sprintf('%s_latest.zip', _.kebabCase(file))
-                },
-                FunctionName: file,
-                Handler: sprintf('index.handler'),
-                Role: sprintf('arn:aws:iam::%s:role/%s', config.get('aws.accountId'), config.get('aws.roleName')),
-                Runtime: 'nodejs4.3',
-                Description: sprintf('Function %s', file)
-            };
-            lambda.createFunction(params, function (err, data) {
-                if (err) {
-                    console.log(err, err.stack);
-                } else {
-                    console.log('Creating lambda function ', data.FunctionArn);
-                }
+fs.access(distDir, fs.F_OK, function (err) {
+    if (!err) {
+        fs.readdir(distDir, (err, files) => {
+            files.forEach(file => {
+                let fnName = file.substring(0, file.lastIndexOf('.') - 7);
+                var params = {
+                    Code: {
+                        S3Bucket: config.get('aws.s3BucketName'),
+                        S3Key: file
+                    },
+                    FunctionName: fnName,
+                    Handler: sprintf('index.handler'),
+                    Role: sprintf('arn:aws:iam::%s:role/%s', config.get('aws.accountId'), config.get('aws.roleName')),
+                    Runtime: 'nodejs4.3',
+                    Description: sprintf('Function %s', fnName)
+                };
+                lambda.createFunction(params, function (err, data) {
+                    if (err) {
+                        console.log(err, err.stack);
+                    } else {
+                        console.log('Creating lambda function ', data.FunctionArn);
+                    }
+                });
             });
-        }
-    });
+        });
+    }
 });

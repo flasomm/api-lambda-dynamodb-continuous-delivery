@@ -64,9 +64,10 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersGet/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:smse-resources-users-get/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
+          "credentials": "arn:aws:iam::841990749458:role/apiLambda",
           "contentHandling": "CONVERT_TO_TEXT",
           "type": "aws"
         }
@@ -104,9 +105,10 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersPost/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:smse-resources-users-post/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
+          "credentials": "arn:aws:iam::841990749458:role/apiLambda",
           "contentHandling": "CONVERT_TO_TEXT",
           "type": "aws"
         }
@@ -151,9 +153,10 @@
           "requestTemplates": {
             "application/json": "#set($allParams = $input.params())\n{\n    \"body-json\" : $input.json('$'),\n    \"params\" : {\n        #foreach($type in $allParams.keySet())\n            #set($params = $allParams.get($type))\n            \"$type\" : {\n                #foreach($paramName in $params.keySet())\n                \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\n                    #if($foreach.hasNext),#end\n                #end\n            }\n            #if($foreach.hasNext),#end\n        #end\n    }\n}\n"
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersGetByUid/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:smse-resources-users-get-by-uid/invocations",
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST",
+          "credentials": "arn:aws:iam::841990749458:role/apiLambda",
           "contentHandling": "CONVERT_TO_TEXT",
           "type": "aws"
         }
@@ -210,9 +213,10 @@
           "requestTemplates": {
             "application/json": "#set($allParams = $input.params())\n{\n    \"body-json\" : $input.json('$'),\n    \"params\" : {\n        #foreach($type in $allParams.keySet())\n            #set($params = $allParams.get($type))\n            \"$type\" : {\n                #foreach($paramName in $params.keySet())\n                \"$paramName\" : \"$util.escapeJavaScript($params.get($paramName))\"\n                    #if($foreach.hasNext),#end\n                #end\n            }\n            #if($foreach.hasNext),#end\n        #end\n    }\n}\n"
           },
-          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:UsersPut/invocations",
+          "uri": "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:841990749458:function:smse-resources-users-put/invocations",
           "passthroughBehavior": "when_no_templates",
           "httpMethod": "POST",
+          "credentials": "arn:aws:iam::841990749458:role/apiLambda",
           "contentHandling": "CONVERT_TO_TEXT",
           "type": "aws"
         }

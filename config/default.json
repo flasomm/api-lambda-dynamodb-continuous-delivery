@@ -1,5 +1,5 @@
 {
-  "projectName": "MyProjectTest",
+  "projectName": "smse",
   "aws": {
     "apiName": "MyTestApi",
     "region": "eu-central-1",
